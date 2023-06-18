@@ -27,7 +27,7 @@ class TaskCardItem {
     const item = document.getElementById(this.id);
     item.addEventListener('dragstart', (event) => {
       event.dataTransfer.setData('text/plain', this.id);
-      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.effectAllowed = 'move'; //effectAllowed is the type that u want when u drag eg-copy,move etc
     });
     item.addEventListener('dragend', (event) => {
       console.log(event);
@@ -36,8 +36,8 @@ class TaskCardItem {
   connectSwtichBtn(type) {
     const taskItem = document.getElementById(this.id);
     let ActionBtn = taskItem.querySelector('button:last-of-type');
-    ActionBtn = DomHelper.clearEvenetListner(ActionBtn);
-    ActionBtn.textContent = type === 'open' ? 'Active' : 'On Hold';
+    ActionBtn = DomHelper.clearEvenetListner(ActionBtn); //clear the previous event listner to the button
+    ActionBtn.textContent = type === 'open' ? 'Active' : 'On Hold'; // update the text of the button
     ActionBtn.addEventListener(
       'click',
       this.updateSwitchTaskList.bind(null, this.id)
@@ -45,7 +45,7 @@ class TaskCardItem {
   }
   update(updateTaskListFn, type) {
     this.updateSwitchTaskList = updateTaskListFn;
-    this.connectSwtichBtn(type);
+    this.connectSwtichBtn(type); // to make again button clickable
   }
 }
 
@@ -100,21 +100,21 @@ class TaskList {
   addTask(task) {
     this.tasks.push(task);
     DomHelper.moveElement(task.id, `#${this.type}_task ul`);
-    task.update(this.switchTask.bind(this), this.type);
+    task.update(this.switchTask.bind(this), this.type); // it help in update ul
   }
   switchTask(cardId) {
     // const cardItemIndex = this.tasks.findIndex( c => c.id === cardId);
     // this.tasks.splice(cardItemIndex,1);
 
-    this.actionHandler(this.tasks.find((c) => c.id === cardId));
-    this.tasks = this.tasks.filter((c) => c.id !== cardId);
+    this.actionHandler(this.tasks.find((c) => c.id === cardId)); // find that id which you want to move
+    this.tasks = this.tasks.filter((c) => c.id !== cardId); // remove the match id and rest make new array and store it into tasks
   }
 }
 class App {
   static init() {
     const openTask = new TaskList('open');
     const activeTask = new TaskList('active');
-    openTask.setActionHandlerFunction(activeTask.addTask.bind(activeTask));
+    openTask.setActionHandlerFunction(activeTask.addTask.bind(activeTask)); //setActionHandlerFunction will return that id card that we want to move and addTask will accept that id card
     activeTask.setActionHandlerFunction(openTask.addTask.bind(openTask));
   }
 }
